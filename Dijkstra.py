@@ -13,6 +13,9 @@ graph = {
     'PTP': {'SXM': 100, 'SBH': 80}
 }
 
+# Diccionario para almacenar las rutas
+routes = defaultdict(list)
+
 # Función para encontrar la ruta más corta
 def dijkstra(graph, start, end, has_visa):
     queue = [(0, start, [])]
@@ -20,6 +23,7 @@ def dijkstra(graph, start, end, has_visa):
     while queue:
         cost, node, path = heappop(queue)
         if node == end:
+            routes[f"{start} to {end}"].append(path + [node])
             return cost, path + [node]
         if node in visited:
             continue
@@ -43,3 +47,10 @@ while True:
         print(f"Costo total: ${cost:.2f}")
     
     print()
+
+# Mostrar las rutas
+print("Rutas guardadas:")
+for route, paths in routes.items():
+    print(f"\n{route}:")
+    for path in paths:
+        print(" -> ".join(path))
