@@ -33,11 +33,28 @@ def dijkstra(graph, start, end, has_visa):
                 heappush(queue, (cost + weight, neighbor, path + [node]))
     return float('inf'), []
 
+# Función para validar el código del aeropuerto
+def validate_airport_code(code):
+    return len(code) == 3 and code.isupper() and code in graph
+
+# Función para validar la visa
+def validate_visa(visa):
+    return visa.lower() in ['s', 'n']
+
 # Interfaz de usuario
 while True:
     origin = input("Ingrese el código del aeropuerto de origen: ").upper()
+    while not validate_airport_code(origin):
+        origin = input("Código de aeropuerto de origen inválido. Inténtelo de nuevo: ").upper()
+    
     destination = input("Ingrese el código del aeropuerto de destino: ").upper()
-    has_visa = input("¿Tiene el pasajero visa? (s/n): ").lower() == 's'
+    while not validate_airport_code(destination):
+        destination = input("Código de aeropuerto de destino inválido. Inténtelo de nuevo: ").upper()
+    
+    has_visa = input("¿Tiene el pasajero visa? (s/n): ")
+    while not validate_visa(has_visa):
+        has_visa = input("Respuesta de visa inválida. Inténtelo de nuevo (s/n): ")
+    has_visa = has_visa.lower() == 's'
     
     cost, path = dijkstra(graph, origin, destination, has_visa)
     if cost == float('inf'):
