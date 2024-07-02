@@ -11,7 +11,7 @@ class Grafico:
 
     def add_edge(self, source, dest, cost):
         self.adj[source][dest] = cost
-        self.adj[dest][source] = cost
+        self.adj[dest][source] = cost 
 
     def vertex_min_cost(self, distances, visited):
         min_cost = float("inf")

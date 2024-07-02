@@ -7,7 +7,7 @@ class App:
         self.root.title("Metro Travel")
         self.graph = graph
 
-        # Centrar la ventana principal
+        # Centrar la ventana principal  
         self.center_window(self.root, 400, 200)
 
         self.origin_var = tk.StringVar()
@@ -15,7 +15,7 @@ class App:
         self.visa_var = tk.BooleanVar()
         self.method_var = tk.StringVar(value="Menor Costo")
 
-        # Frame for inputs
+        # Frame para las entradas que tiene que realizar el usuario
         frame = ttk.Frame(self.root, padding="10")
         frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
@@ -26,16 +26,25 @@ class App:
         frame.columnconfigure(1, weight=2)
         frame.columnconfigure(2, weight=1)
 
+        #Entrada de la ciudad de Origen
         ttk.Label(frame, text="Origen:").grid(row=0, column=0, sticky=tk.E, padx=5, pady=5)
         ttk.Entry(frame, textvariable=self.origin_var).grid(row=0, column=1, columnspan=2, sticky=(tk.W, tk.E), padx=5, pady=5)
 
+        #Entrada de la ciudad de destino
         ttk.Label(frame, text="Destino:").grid(row=1, column=0, sticky=tk.E, padx=5, pady=5)
         ttk.Entry(frame, textvariable=self.destination_var).grid(row=1, column=1, columnspan=2, sticky=(tk.W, tk.E), padx=5, pady=5)
 
+        # Crear una etiqueta con el texto "Método" y colocarla en la posición (row=2, column=0) de un marco (frame)
         ttk.Label(frame, text="Método:").grid(row=2, column=0, sticky=tk.E, padx=5, pady=5)
+
+        # Crear un botón de opción con el texto "Menor Costo" y asignarlo a la variable de control self.method_var
+        # Colocar el botón de opción en la posición (row=2, column=1) de un marco (frame)
         ttk.Radiobutton(frame, text="Menor Costo", variable=self.method_var, value="Menor Costo").grid(row=2, column=1, sticky=tk.W, padx=5, pady=5)
+        # Crear un botón de opción con el texto "Menor Escalas" y asignarlo a la variable de control self.method_var
+        # Colocar el botón de opción en la posición (row=2, column=2) de un marco (frame)
         ttk.Radiobutton(frame, text="Menor Escalas", variable=self.method_var, value="Menor Escalas").grid(row=2, column=2, sticky=tk.W, padx=5, pady=5)
 
+        #Entrada para verificar si el usuario posee o no una visa
         ttk.Checkbutton(frame, text="Tengo Visa", variable=self.visa_var).grid(row=3, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5)
 
         ttk.Button(frame, text="Calcular Ruta", command=self.calculate_route).grid(row=4, column=0, columnspan=3, sticky=(tk.W, tk.E), padx=5, pady=5)
