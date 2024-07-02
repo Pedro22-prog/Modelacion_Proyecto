@@ -5,7 +5,7 @@ from matplotlib.lines import Line2D
 class Grafico:
     def __init__(self, V, visas, codes):
         self.V = V
-        self.adj = [[float("inf") for _ in range(V)] for _ in range(V)]
+        self.adj = [[float("inf")] * V for _ in range(V)]
         self.visas = visas
         self.codes = codes
 
@@ -14,15 +14,7 @@ class Grafico:
         self.adj[dest][source] = cost 
 
     def vertex_min_cost(self, distances, visited):
-        min_cost = float("inf")
-        min_vertex = -1
-
-        for vertex in range(self.V):
-            if not visited[vertex] and distances[vertex] < min_cost:
-                min_cost = distances[vertex]
-                min_vertex = vertex
-
-        return min_vertex
+        return min((vertex for vertex in range(self.V) if not visited[vertex]), key=lambda v: distances[v], default=-1)
 
     def get_path(self, previous_Airports, source, dest):
         path = []
@@ -70,9 +62,9 @@ class Grafico:
         if self.visas[self.codes[source]] and not has_visa:
             return [], 0, float("inf")
 
-        while len(auxList) > 0:
-            auxList.sort(key=lambda x: x[1])
-            path, stops, cost = auxList.pop(0)
+        while auxList:
+            path, stops, cost = min(auxList, key=lambda x: x[1])
+            auxList.remove((path, stops, cost))
             current = self.codes.index(path[-1])
 
             if current == end_v:
@@ -91,7 +83,7 @@ class Grafico:
         plt.close()  # Cierra cualquier grafo previo
         G = nx.Graph()
         for i in range(self.V):
-            for j in range(self.V):
+            for j in range(i+1, self.V):
                 if self.adj[i][j] != float("inf"):
                     G.add_edge(self.codes[i], self.codes[j], weight=self.adj[i][j])
 
@@ -116,7 +108,7 @@ class Grafico:
         plt.close()  # Cierra cualquier grafo previo
         G = nx.Graph()
         for i in range(self.V):
-            for j in range(self.V):
+            for j in range(i+1, self.V):
                 if self.adj[i][j] != float("inf"):
                     G.add_edge(self.codes[i], self.codes[j], weight=self.adj[i][j])
 
@@ -129,20 +121,7 @@ class Grafico:
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=10, label_pos=0.3,
                                      bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
 
-        node_colors = []
-        for node in G.nodes():
-            if node in path:
-                if self.visas[node] and node != path[0] and node != path[-1]:
-                    node_colors.append('#ff9999')
-                elif node == path[0]:
-                    node_colors.append('yellow')
-                elif node == path[-1]:
-                    node_colors.append('orange')
-                else:
-                    node_colors.append('lightblue')
-            else:
-                node_colors.append('lightgray')
-
+        node_colors = ['yellow' if node == path[0] else 'orange' if node == path[-1] else '#ff9999' if self.visas[node] and node != path[0] and node != path[-1] else 'lightblue' for node in G.nodes()]
         nx.draw_networkx_nodes(G, pos, nodelist=G.nodes(), node_color=node_colors, node_size=500)
 
         scr_label = "Origen (Requiere Visa)" if self.visas[path[0]] else "Origen"
